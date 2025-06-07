@@ -1,0 +1,15 @@
+{
+  "name": "ai-tools-admin",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build"
+  },
+  "dependencies": {
+    "@ant-design/pro-components": "^2.x",
+    "@umijs/max": "^4.x",
+    "antd": "^5.x",
+    "typescript": "^5.x"
+  }
+} 

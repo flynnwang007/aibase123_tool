@@ -1,0 +1,83 @@
+-- 创建用户表
+CREATE TABLE IF NOT EXISTS users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(100) NOT NULL,
+  role ENUM('admin', 'user') DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 创建分类表
+CREATE TABLE IF NOT EXISTS categories (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  slug VARCHAR(50) NOT NULL UNIQUE,
+  parent_id INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE SET NULL
+);
+
+-- 创建工具表
+CREATE TABLE IF NOT EXISTS tools (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  slug VARCHAR(100) NOT NULL UNIQUE,
+  description TEXT NOT NULL,
+  logo_url VARCHAR(255) NOT NULL,
+  website_url VARCHAR(255) NOT NULL,
+  category_id INT NOT NULL,
+  status TINYINT DEFAULT 1,
+  featured BOOLEAN DEFAULT FALSE,
+  views INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+-- 创建标签表
+CREATE TABLE IF NOT EXISTS tags (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 创建工具标签关联表
+CREATE TABLE IF NOT EXISTS tool_tags (
+  tool_id INT NOT NULL,
+  tag_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (tool_id, tag_id),
+  FOREIGN KEY (tool_id) REFERENCES tools(id) ON DELETE CASCADE,
+  FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+);
+
+-- 创建收藏表
+CREATE TABLE IF NOT EXISTS favorites (
+  user_id INT NOT NULL,
+  tool_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, tool_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (tool_id) REFERENCES tools(id) ON DELETE CASCADE
+);
+
+-- 创建评论表
+CREATE TABLE IF NOT EXISTS comments (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  tool_id INT NOT NULL,
+  content TEXT NOT NULL,
+  rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (tool_id) REFERENCES tools(id) ON DELETE CASCADE
+);
+
+-- 添加索引
+CREATE INDEX idx_tools_category ON tools(category_id);
+CREATE INDEX idx_tools_status ON tools(status);
+CREATE INDEX idx_tools_featured ON tools(featured);
+CREATE INDEX idx_tools_views ON tools(views);
+CREATE INDEX idx_comments_tool ON comments(tool_id); 

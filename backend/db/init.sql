@@ -1,0 +1,48 @@
+-- 创建数据库
+CREATE DATABASE IF NOT EXISTS ai_tools;
+USE ai_tools;
+
+-- 工具分类表
+CREATE TABLE categories (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  slug VARCHAR(50) NOT NULL,
+  icon VARCHAR(100),
+  sort_order INT DEFAULT 0,
+  parent_id INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- AI工具表
+CREATE TABLE tools (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  slug VARCHAR(100) NOT NULL,
+  description TEXT,
+  logo_url VARCHAR(255),
+  website_url VARCHAR(255),
+  category_id INT,
+  status TINYINT DEFAULT 1,
+  featured BOOLEAN DEFAULT FALSE,
+  views INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+-- 工具标签表
+CREATE TABLE tags (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 工具-标签关联表
+CREATE TABLE tool_tags (
+  tool_id INT,
+  tag_id INT,
+  PRIMARY KEY (tool_id, tag_id),
+  FOREIGN KEY (tool_id) REFERENCES tools(id),
+  FOREIGN KEY (tag_id) REFERENCES tags(id)
+); 

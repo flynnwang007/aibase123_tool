@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #1677ff;
+}
+
+body {
+  @apply bg-gray-50;
+}
+
+#__next {
+  @apply min-h-screen;
+}
+
+.container {
+  @apply px-4 mx-auto max-w-7xl;
+}
+
+/* Layout */
+.ant-layout {
+  @apply bg-transparent;
+}
+
+.ant-layout-header {
+  @apply h-16 leading-[4rem] px-0 bg-white shadow-sm;
+}
+
+.ant-layout-sider {
+  @apply bg-white border-r border-gray-200;
+}
+
+.ant-layout-content {
+  @apply mt-16; /* 为固定的header留出空间 */
+}
+
+/* Menu */
+.ant-menu {
+  @apply border-b-0;
+}
+
+/* Card */
+.ant-card {
+  @apply shadow-sm transition-shadow hover:shadow-md;
+}
+
+/* Search */
+.ant-input-search {
+  @apply w-full max-w-2xl mx-auto;
+} 
